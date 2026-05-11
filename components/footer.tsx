@@ -3,12 +3,20 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { MapPin, Clock, Github, Linkedin, Twitter, Mail, Heart } from 'lucide-react'
+import Link from 'next/link'
 
 const socialLinks = [
   { name: 'GitHub', icon: Github, href: 'https://github.com' },
   { name: 'LinkedIn', icon: Linkedin, href: 'https://linkedin.com' },
   { name: 'Twitter', icon: Twitter, href: 'https://twitter.com' },
   { name: 'Email', icon: Mail, href: 'mailto:hello@aavash.com' },
+]
+
+const quickLinks = [
+  { name: 'Home', href: '/' },
+  { name: 'About Me', href: '/about' },
+  { name: 'Hire Me', href: '/hire' },
+  { name: 'Contact Me', href: '/contact' },
 ]
 
 export function Footer() {
@@ -19,7 +27,6 @@ export function Footer() {
   useEffect(() => {
     setMounted(true)
     
-    // Update time every second
     const updateTime = () => {
       const now = new Date()
       setTime(
@@ -35,7 +42,6 @@ export function Footer() {
     updateTime()
     const timeInterval = setInterval(updateTime, 1000)
 
-    // Get user location
     const fetchLocation = async () => {
       try {
         const response = await fetch('https://ipapi.co/json/')
@@ -55,10 +61,6 @@ export function Footer() {
     return () => clearInterval(timeInterval)
   }, [])
 
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' })
-  }
-
   if (!mounted) {
     return null
   }
@@ -68,10 +70,7 @@ export function Footer() {
       {/* Background */}
       <div className="absolute inset-0">
         <motion.div
-          animate={{
-            x: [0, 30, 0],
-            y: [0, -20, 0],
-          }}
+          animate={{ x: [0, 30, 0], y: [0, -20, 0] }}
           transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
           className="absolute bottom-0 left-1/4 w-[400px] h-[400px] rounded-full bg-accent/3 blur-[100px]"
         />
@@ -82,15 +81,12 @@ export function Footer() {
         <div className="grid md:grid-cols-3 gap-12 md:gap-8 mb-12">
           {/* Brand */}
           <div className="space-y-4">
-            <motion.button
-              onClick={scrollToTop}
-              className="text-2xl font-medium tracking-tight"
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-            >
-              <span className="text-foreground">Aavash</span>
-              <span className="text-accent ml-1">.</span>
-            </motion.button>
+            <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+              <Link href="/" className="text-2xl font-medium tracking-tight inline-block">
+                <span className="text-foreground">Aavash</span>
+                <span className="text-accent ml-1">.</span>
+              </Link>
+            </motion.div>
             <p className="text-muted-foreground leading-relaxed max-w-xs">
               Crafting exceptional digital experiences through innovation, design, and dedication.
             </p>
@@ -100,19 +96,14 @@ export function Footer() {
           <div className="space-y-4">
             <h4 className="text-sm uppercase tracking-widest text-muted-foreground">Quick Links</h4>
             <nav className="flex flex-col gap-2">
-              {['Home', 'About Me', 'Hire Me', 'Contact Me'].map((link) => (
-                <a
-                  key={link}
-                  href={`#${link.toLowerCase().replace(' ', '-').replace('-me', '')}`}
-                  onClick={(e) => {
-                    e.preventDefault()
-                    const id = link.toLowerCase().replace(' me', '').replace(' ', '')
-                    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' })
-                  }}
+              {quickLinks.map((link) => (
+                <Link
+                  key={link.name}
+                  href={link.href}
                   className="text-muted-foreground hover:text-foreground transition-colors w-fit"
                 >
-                  {link}
-                </a>
+                  {link.name}
+                </Link>
               ))}
             </nav>
           </div>
